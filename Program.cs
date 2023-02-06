@@ -114,7 +114,7 @@ namespace ConsoleAppFiles
                 TimeSpan timeSpan = DateTime.Now.Subtract(date);  // определение разницы во времени
                 Console.WriteLine($"На выполнение потраченно {timeSpan.TotalSeconds} секунд");
 
-                Console.WriteLine($"Размер файла = {result.Length}. Напиши '1' если хотите заархивировать файл или '2' для завершения");
+                Console.Write($"Размер файла = {result.Length}. Напиши '1' если хотите заархивировать файл или '2' для завершения: ");
 
                 int key1 = CheckValue();
 
