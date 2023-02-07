@@ -43,10 +43,8 @@ namespace ConsoleAppFiles
 
                 sb.AppendLine();
                 sb.Append($"Группа {countGrup}: {i}  ");
-            }
-            string result = sb.ToString();
-
-            return result;
+            }            
+            return sb.ToString();
         }
         /// <summary>
         /// архивирует файл
@@ -95,6 +93,14 @@ namespace ConsoleAppFiles
             string compressed = @"E:\С#\SB\Date\res_txt.7z"; // путь куда сохранить архив
 
             string numbN = File.ReadAllText(path);  // получение числа N  из файла  
+
+            bool empty = String.IsNullOrEmpty(numbN);
+            if (empty == true)
+            {
+                Console.WriteLine("Файл пустой");
+                return;
+            }
+
             int N = int.Parse(numbN);
 
             string result = StringBuild(N);  // метод заполнения групп
