@@ -94,8 +94,8 @@ namespace ConsoleAppFiles
 
             string numbN = File.ReadAllText(path);  // получение числа N  из файла  
 
-            bool empty = String.IsNullOrEmpty(numbN);
-            if (empty == true)
+            
+            if (string.IsNullOrEmpty(numbN))
             {
                 Console.WriteLine("Файл пустой");
                 return;
