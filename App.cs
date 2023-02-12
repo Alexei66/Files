@@ -74,7 +74,7 @@ namespace ConsoleAppFiles
             return lineCount;
         }
 
-        public static class Validator                       // файл существует и первая строка не пустая
+        public static class Validator                       // файл существует и первая строка не пустая?
         {
             public static bool NullOrEmpty(string path)
             {
@@ -90,22 +90,28 @@ namespace ConsoleAppFiles
             }
         }
 
-        public static string PathAndNameTXT(string path, string name)
+        public static string PathAndNameTXT(string pathTXT, string nameTXT)
         {
-            StringBuilder sbPpath = new StringBuilder();
+            string sbPpath = $"{pathTXT}{nameTXT}.txt";
 
-            sbPpath.Append($"{path}");
-            sbPpath.Append($"{name}.txt");
-            return sbPpath.ToString();
+            return sbPpath;
         }
 
-        public static string PathAndName7Z(string path, string name)
+        public static string PathAndName7Z(string path7Z, string name7Z)
         {
-            StringBuilder sPpath = new StringBuilder();
+            string sPpath = $"{path7Z}{name7Z}.7z";
 
-            sPpath.Append(path);
-            sPpath.Append($"{name}.7z");
-            return sPpath.ToString();
+            return sPpath;
+        }
+
+        public static string DirectoryCheck(string pathDirectory)
+        {
+            while (Directory.Exists(pathDirectory) is false)
+            {
+                Console.Write("Такого пути нет! Попробуй еще раз: ");
+                pathDirectory = Console.ReadLine();
+            }
+            return pathDirectory;
         }
 
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,16 +119,17 @@ namespace ConsoleAppFiles
         public static void Starts()
         {
             Console.Write($"Введите путь к папке с файлом в которм записано  число, так -  E:\\С#\\SB\\Date\\ : ");
-            string Path = Console.ReadLine();  // путь к папке с файлом в которм записано  число  E:\С#\SB\Date\N.txt
+            string path = Console.ReadLine();  // путь к папке с файлом в которм записано  число  E:\С#\SB\Date\N.txt
+            string pathFile = DirectoryCheck(path);
 
             Console.Write($"Введите имя файла для чтения исходного числа: ");
             string filePathName = Console.ReadLine();
 
-            string filePath = PathAndNameTXT(Path, filePathName);
+            string filePath = PathAndNameTXT(pathFile, filePathName);
 
             if (Validator.NullOrEmpty(filePath) is false)
             {
-                Console.WriteLine("Файл пустой");
+                Console.WriteLine("Файл пустой или не найден");
                 return;
             }
 
@@ -139,8 +146,10 @@ namespace ConsoleAppFiles
             int key = CheckValue();
             if (key == 1)
             {
-                Console.Write($"Введите путь к папке в которую будет сохранен файл, так -  E:\\С#\\SB\\Date\\ : ");
-                string pathSaveFile = Console.ReadLine();  // путь к файлу в котором сохранят результат E:\С#\SB\Date\res.txt
+                Console.Write($"\nВведите путь к папке в которую будет сохранен файл, так -  E:\\С#\\SB\\Date\\ : ");
+                string pathSaveFileCheck = Console.ReadLine();  // путь к файлу в котором сохранят результат E:\С#\SB\Date\res.txt
+                string pathSaveFile = DirectoryCheck(pathSaveFileCheck);
+
                 Console.Write($"Введите имя для нового файла, в который запишем результат: ");
                 string nameSaveFile = Console.ReadLine();
 
@@ -151,7 +160,7 @@ namespace ConsoleAppFiles
                 stopWatch.Stop();
 
                 Console.WriteLine($"На выполнение потраченно {stopWatch.ElapsedMilliseconds} миллисекунд");
-                Console.Write($"Размер файла = {allGroupsInLine.Length}. Напиши '1' если хотите заархивировать файл, '2' для просмотра количества групп или '3' для завершения: ");
+                Console.Write($"Размер файла = {allGroupsInLine.Length}. \nНапиши '1' если хотите заархивировать файл, '2' для просмотра количества групп или '3' для завершения: ");
 
                 key = CheckValue();
                 switch (key)
@@ -159,8 +168,10 @@ namespace ConsoleAppFiles
                     case 1:
                         if (key == 1)
                         {
-                            Console.Write($"Введите путь к папке в которую будет сохранен архив, так -  E:\\С#\\SB\\Date\\res_txt.7z: ");
-                            string pathCompressed = Console.ReadLine(); // путь куда сохранить архив E:\С#\SB\Date\res_txt.7z
+                            Console.Write($"\nВведите путь к папке в которую будет сохранен архив, так -  E:\\С#\\SB\\Date\\ : ");
+                            string pathCompressedCheck = Console.ReadLine(); // путь куда сохранить архив E:\С#\SB\Date\res_txt.7z
+                            string pathCompressed = DirectoryCheck(pathCompressedCheck);
+
                             Console.Write($"Введите имя для нового архива: ");
                             string nameCompressed = Console.ReadLine();
 
@@ -171,6 +182,7 @@ namespace ConsoleAppFiles
                         break;
 
                     case 2:
+                        stopWatch.Restart();
                         int lineCount = CountNewLine(allGroupsInLine);
                         //Console.ReadKey();
                         stopWatch.Stop();
