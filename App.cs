@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
+using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -11,7 +12,7 @@ namespace ConsoleAppFiles
         public static int CheckValue()
         {
             int correctValue;
-            while (!int.TryParse(Console.ReadLine(), out correctValue) || correctValue < 1 || correctValue > 2)
+            while (!int.TryParse(Console.ReadLine(), out correctValue) || correctValue < 1 || correctValue > 3)
             {
                 Console.WriteLine("Неправильно! Попробуй еще раз.");
             }
@@ -19,11 +20,6 @@ namespace ConsoleAppFiles
             return correctValue;
         }
 
-        /// <summary>
-        /// создает строку из чисел
-        /// </summary>
-        /// <param name="N"></param>
-        /// <returns></returns>
         public static string StringBuild(int N)
         {
             StringBuilder sb = new StringBuilder();
@@ -49,49 +45,36 @@ namespace ConsoleAppFiles
             return sb.ToString();
         }
 
-        /// <summary>
-        /// архивирует файл
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="compressedFile"></param>
         public static void CompressedFile(string file, string compressedFile)
         {
-            using FileStream ss = new FileStream(file, FileMode.OpenOrCreate);             ////////////// АРХИВАЦИЯ ФАЙЛА  ////////////////////////////
+            using FileStream ss = new FileStream(file, FileMode.OpenOrCreate);                       ////////////// АРХИВАЦИЯ ФАЙЛА  ///////////////
             {
-                using FileStream ts = File.Create(compressedFile);   // поток для записи сжатого файла   //////////////            ////////////////////////////
+                using FileStream ts = File.Create(compressedFile);   // поток для записи сжатого файла   //////////////            ///////////////
                 {
                     // поток архивации
                     using GZipStream cs = new GZipStream(ts, CompressionMode.Compress);
                     {
                         ss.CopyTo(cs); // копируем байты из одного потока в другой
-                        Console.WriteLine("Сжатие файла {0} завершено. Было: {1}  стало: {2}.",
-                                          file,
-                                          ss.Length,
-                                          ts.Length);
+                        Console.WriteLine("Сжатие файла  завершено. Было: {0}  стало: {1}.", ss.Length, ts.Length);
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// считает кол-во переходов на новую строку
-        /// </summary>
-        /// <param name="strFile"></param>
-        /// <returns></returns>
-        public static int CountNewLine(string strFile)
+        public static int CountNewLine(string strFile)  // подсчет кол-ва групп
         {
             int lineCount = 1;
-            for (int i = 0; i < strFile.Length; i++)  // подсчет кол-ва групп
+            for (int i = 0; i < strFile.Length; i++)
             {
                 if (strFile[i] == '\n')
                 {
-                    lineCount++;
+                    lineCount++;                        // подсчет переходов на новую строку
                 }
             }
             return lineCount;
         }
 
-        public static class Validator
+        public static class Validator                       // файл существует и первая строка не пустая
         {
             public static bool NullOrEmpty(string path)
             {
@@ -103,67 +86,102 @@ namespace ConsoleAppFiles
                 {
                     return false;
                 }
-                //string numbN = File.ReadAllText(path);
-                //bool res = string.IsNullOrEmpty(numbN);
                 return true;
             }
         }
 
-        public static void Start()
+        public static string PathAndNameTXT(string path, string name)
         {
-            Console.Write($"Введите путь к папке с файлом в которм записано  число, так -  E:\\С#\\SB\\Date\\N.txt  ");
-            string path = Console.ReadLine();  // путь к папке с файлом в которм записано  число  E:\С#\SB\Date\N.txt
+            StringBuilder sbPpath = new StringBuilder();
 
-            string writeRes = @"E:\С#\SB\Date\res.txt"; // путь к файлу в котором сохранят результат
-            string compressed = @"E:\С#\SB\Date\res_txt.7z"; // путь куда сохранить архив
+            sbPpath.Append($"{path}");
+            sbPpath.Append($"{name}.txt");
+            return sbPpath.ToString();
+        }
 
-            if (Validator.NullOrEmpty(path) is false)
+        public static string PathAndName7Z(string path, string name)
+        {
+            StringBuilder sPpath = new StringBuilder();
+
+            sPpath.Append(path);
+            sPpath.Append($"{name}.7z");
+            return sPpath.ToString();
+        }
+
+        /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public static void Starts()
+        {
+            Console.Write($"Введите путь к папке с файлом в которм записано  число, так -  E:\\С#\\SB\\Date\\ : ");
+            string Path = Console.ReadLine();  // путь к папке с файлом в которм записано  число  E:\С#\SB\Date\N.txt
+
+            Console.Write($"Введите имя файла для чтения исходного числа: ");
+            string filePathName = Console.ReadLine();
+
+            string filePath = PathAndNameTXT(Path, filePathName);
+
+            if (Validator.NullOrEmpty(filePath) is false)
             {
                 Console.WriteLine("Файл пустой");
                 return;
             }
 
-            string numbN = File.ReadAllText(path);  // получение числа N  из файла
-            int numberFromFile = int.Parse(numbN);
+            string numbFileString = File.ReadAllText(filePath);  // получение числа N  из файла
+            int numberFromFile = int.Parse(numbFileString);
 
-            string result = StringBuild(numberFromFile);  // метод заполнения групп
+            string allGroupsInLine = StringBuild(numberFromFile);  // метод заполнения групп
 
-            int key;
+            Console.Write("\nНапиши '1' если хотите записать результат в файл или '2' для завершения: ");
 
-            Console.Write("Напиши '1' если хотите записать результат в файл или '2' для просмотра кол-ва групп: ");
-
-            key = CheckValue();
-
-            //DateTime date = DateTime.Now;  // создает точку отсчета из текущго времени
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
+            int key = CheckValue();
             if (key == 1)
             {
-                File.WriteAllText(writeRes, result);  // запись файла с значениями из "result"  в  папку "writeRes"
+                Console.Write($"Введите путь к папке в которую будет сохранен файл, так -  E:\\С#\\SB\\Date\\ : ");
+                string pathSaveFile = Console.ReadLine();  // путь к файлу в котором сохранят результат E:\С#\SB\Date\res.txt
+                Console.Write($"Введите имя для нового файла, в который запишем результат: ");
+                string nameSaveFile = Console.ReadLine();
+
+                string savedFile = PathAndNameTXT(pathSaveFile, nameSaveFile);
+
+                File.WriteAllText(savedFile, allGroupsInLine);  // запись файла с значениями из allGroupsInLine
 
                 stopWatch.Stop();
 
-                //TimeSpan timeSpan = DateTime.Now.Subtract(date);  // определение разницы во времени
                 Console.WriteLine($"На выполнение потраченно {stopWatch.ElapsedMilliseconds} миллисекунд");
-
-                Console.Write($"Размер файла = {result.Length}. Напиши '1' если хотите заархивировать файл или '2' для завершения: ");
+                Console.Write($"Размер файла = {allGroupsInLine.Length}. Напиши '1' если хотите заархивировать файл, '2' для просмотра количества групп или '3' для завершения: ");
 
                 key = CheckValue();
-
-                if (key == 1)
+                switch (key)
                 {
-                    CompressedFile(writeRes, compressed);
+                    case 1:
+                        if (key == 1)
+                        {
+                            Console.Write($"Введите путь к папке в которую будет сохранен архив, так -  E:\\С#\\SB\\Date\\res_txt.7z: ");
+                            string pathCompressed = Console.ReadLine(); // путь куда сохранить архив E:\С#\SB\Date\res_txt.7z
+                            Console.Write($"Введите имя для нового архива: ");
+                            string nameCompressed = Console.ReadLine();
+
+                            string compressed = PathAndName7Z(pathCompressed, nameCompressed);
+
+                            CompressedFile(savedFile, compressed);
+                        }
+                        break;
+
+                    case 2:
+                        int lineCount = CountNewLine(allGroupsInLine);
+                        //Console.ReadKey();
+                        stopWatch.Stop();
+
+                        Console.WriteLine($"На выполнение потраченно {stopWatch.ElapsedMilliseconds} миллисекунд");
+                        Console.WriteLine($"Кол-во групп = {lineCount} при N = {numberFromFile}");
+                        break;
+
+                    case 3:
+                        break;
                 }
-            }
-            else
-            {
-                int lineCount = CountNewLine(result);
-                //Console.ReadKey();
-                stopWatch.Stop();
-                //TimeSpan timeSpan = DateTime.Now.Subtract(date);
-                Console.WriteLine($"На выполнение потраченно {stopWatch.ElapsedMilliseconds} миллисекунд");
-                Console.WriteLine($"Кол-во групп = {lineCount} при N = {numberFromFile}");
             }
         }
     }

@@ -13,7 +13,7 @@ namespace ConsoleAppFiles
         //    while (!int.TryParse(Console.ReadLine(), out correctValue) || correctValue < 1|| correctValue>2)
         //    {
         //        Console.WriteLine("Неправильно! Попробуй еще раз.");
-        //    }            
+        //    }
 
         //        return correctValue;
         //}
@@ -43,7 +43,7 @@ namespace ConsoleAppFiles
 
         //        sb.AppendLine();
         //        sb.Append($"Группа {countGrup}: {i}  ");
-        //    }            
+        //    }
         //    return sb.ToString();
         //}
         ///// <summary>
@@ -74,7 +74,7 @@ namespace ConsoleAppFiles
         ///// </summary>
         ///// <param name="strFile"></param>
         ///// <returns></returns>
-        //static int CountNewLine (string strFile) 
+        //static int CountNewLine (string strFile)
         //{
         //    int lineCount = 1;
         //    for (int i = 0; i < strFile.Length; i++)  // подсчет кол-ва групп
@@ -86,14 +86,9 @@ namespace ConsoleAppFiles
         //    }
         //    return lineCount;
         //}
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            App.Start();  
-
+            App.Starts();
         }
-        
-
     }
-
-
 }
