@@ -102,7 +102,7 @@ namespace ConsoleAppFiles
 
         public static string DirectoryCheck(string pathDirectory)
         {
-            while (Directory.Exists(pathDirectory) is false)
+            while (Directory.Exists(pathDirectory) is false || pathDirectory[pathDirectory.Length - 1] != '\\')
             {
                 Console.Write("Такого пути нет! Попробуй еще раз: ");
                 pathDirectory = Console.ReadLine();
