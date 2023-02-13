@@ -92,16 +92,12 @@ namespace ConsoleAppFiles
 
         public static string PathAndNameTXT(string pathTXT, string nameTXT)
         {
-            string sbPpath = $"{pathTXT}{nameTXT}.txt";
-
-            return sbPpath;
+            return $"{pathTXT}{nameTXT}.txt";
         }
 
         public static string PathAndName7Z(string path7Z, string name7Z)
         {
-            string sPpath = $"{path7Z}{name7Z}.7z";
-
-            return sPpath;
+            return $"{path7Z}{name7Z}.7z";
         }
 
         public static string DirectoryCheck(string pathDirectory)
