@@ -104,7 +104,7 @@ namespace ConsoleAppFiles
         {
             while (Directory.Exists(pathDirectory) is false || pathDirectory[pathDirectory.Length - 1] != '\\')
             {
-                Console.Write("Такого пути нет! Попробуй еще раз: ");
+                Console.Write("Неправильно! Попробуй еще раз: ");
                 pathDirectory = Console.ReadLine();
             }
             return pathDirectory;
