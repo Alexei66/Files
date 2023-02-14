@@ -88,7 +88,21 @@ namespace ConsoleAppFiles
         //}
         private static void Main(string[] args)
         {
-            App.Starts();
+            //App.Starts();
+            int start = 1_000;
+            int orel = 1;
+            int count = 0;
+            Random rand = new Random();
+
+            for (int i = 0; i < start; i++)
+            {
+                int monetka = rand.Next(1, 3);
+                if (monetka == orel)
+                {
+                    count++;
+                }
+            }
+            Console.WriteLine(count);
         }
     }
 }
